@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Maddy's Daisy Field</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Nunito:wght@400;600;800&family=DM+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#eaf4ff;
+  --sky:#bfdcff;
+  --ink:#1f2f4d;
+  --muted:#5a6a88;
+  --card:#ffffff;
+  --line:#cfe0f5;
+  --petal:#ffffff;
+  --petal-edge:#d9e4f2;
+  --sun:#ffc83a;
+  --leaf:#4e9a58;
+  --grass:#86c770;
+  --grass-deep:#5aa65a;
+  --accent:#2c6be0;
+  --paper:#fffdf6;
+  --rule:#d6e6fb;
+  --hand:"Nanum Pen Script","Comic Sans MS","Bradley Hand",cursive;
+  --body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"DM Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1830; --sky:#16264b; --ink:#eef3ff; --muted:#a6b4d4; --card:#172548; --line:#2a3c68;
+    --petal:#f3f6ff; --petal-edge:#9fb0d6; --sun:#ffd86b; --leaf:#5cb06a; --grass:#2e6a45; --grass-deep:#1f5236;
+    --accent:#8fb4ff; --paper:#1b2a50; --rule:#2b3d6a; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1830; --sky:#16264b; --ink:#eef3ff; --muted:#a6b4d4; --card:#172548; --line:#2a3c68;
+  --petal:#f3f6ff; --petal-edge:#9fb0d6; --sun:#ffd86b; --leaf:#5cb06a; --grass:#2e6a45; --grass-deep:#1f5236;
+  --accent:#8fb4ff; --paper:#1b2a50; --rule:#2b3d6a; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;margin:0;overflow-x:hidden}
+h1,h2,h3{font-family:var(--hand);font-weight:400;line-height:1;text-wrap:balance;margin:0}
+p{margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+/* meadow */
+.meadow{position:relative;background:linear-gradient(var(--sky),var(--bg));overflow:hidden}
+#field{display:block;width:100%;height:clamp(420px,62vh,560px);cursor:pointer;touch-action:manipulation}
+.hello{position:absolute;inset:0 0 auto 0;padding-top:clamp(28px,6vh,64px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));text-align:center;pointer-events:none}
+.dates{text-transform:lowercase;font-family:var(--mono);font-size:13px;letter-spacing:.08em;color:var(--muted)}
+.hello h1{font-size:clamp(64px,13vw,132px);margin-top:6px;color:var(--ink)}
+.hello h1 span{color:var(--accent)}
+.hint{font-family:var(--hand);font-size:26px;color:var(--muted);margin-top:8px}
+
+/* page column */
+.page{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:56px 40px;display:grid;gap:88px}
+section{display:grid;gap:22px}
+section>h2{font-size:clamp(46px,9vw,64px)}
+.lede{font-size:18px;color:var(--ink);max-width:62ch}
+.lede+.lede{margin-top:-6px}
+.small{font-size:15px;color:var(--muted)}
+
+/* timeline */
+.timeline{list-style:none;margin:0;padding:0;display:grid;gap:0;position:relative}
+.timeline::before{content:"";position:absolute;left:11px;top:10px;bottom:10px;width:2px;background:repeating-linear-gradient(var(--line) 0 6px,transparent 6px 12px)}
+.timeline li{display:grid;grid-template-columns:24px 1fr;gap:16px;padding-block:14px}
+.timeline .dot{width:24px;height:24px;margin-top:2px;position:relative}
+.timeline .dot svg{width:24px;height:24px;display:block}
+.timeline .when{text-transform:lowercase;font-family:var(--mono);font-size:13px;letter-spacing:.06em;color:var(--muted)}
+.timeline h3{font-size:34px;margin:2px 0 4px}
+.timeline p{color:var(--ink);max-width:56ch}
+.timeline li.today h3{color:var(--accent)}
+
+/* numbers */
+.numbers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.num{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:18px 18px 16px;display:grid;gap:4px;align-content:start;min-width:0}
+.num b{font-family:var(--mono);font-weight:500;font-size:clamp(30px,6vw,40px);line-height:1.1;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.num span{font-size:15px;color:var(--muted)}
+.num.wide{grid-column:1/-1}
+.tie{display:grid;gap:10px;margin-top:6px}
+.tie-row{display:grid;grid-template-columns:76px 1fr 34px;gap:10px;align-items:center;font-size:15px}
+.tie-bar{height:14px;border-radius:7px;background:var(--line);overflow:hidden}
+.tie-bar i{display:block;height:100%;border-radius:7px;background:var(--accent)}
+.tie-bar.her i{background:var(--sun)}
+.tie-row em{font-style:normal;font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.hours{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;align-items:end;height:110px;margin-top:10px}
+.hours i{display:block;background:var(--line);border-radius:3px 3px 0 0;min-height:2px}
+.hours i.peak{background:var(--accent)}
+.hour-labels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:6px}
+.counted{font-family:var(--hand);font-size:24px;color:var(--muted)}
+
+/* petals */
+.loves{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:28px;align-items:center}
+.flower{width:100%;max-width:300px;aspect-ratio:1;justify-self:center;overflow:visible}
+.flower .petal{cursor:pointer;transform-box:fill-box;transform-origin:center;transition:transform 1.1s cubic-bezier(.3,.6,.4,1),opacity 1.1s ease}
+.flower .petal ellipse{fill:var(--petal);stroke:var(--petal-edge);stroke-width:1.5;transition:fill .2s}
+.flower .petal:hover ellipse,.flower .petal:focus-visible ellipse{fill:var(--sun)}
+.flower .petal:focus{outline:none}
+.flower .petal.gone{opacity:0;pointer-events:none}
+.flower .center{fill:var(--sun)}
+.flower .center-dots{fill:var(--ink);opacity:.18}
+.note{background:var(--paper);border:1.5px solid var(--line);border-radius:6px 22px 8px 18px;padding:22px 22px 20px;min-height:180px;display:grid;gap:10px;align-content:start;transform:rotate(-1deg)}
+.note .label{text-transform:lowercase;font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--muted)}
+.note .reason{font-family:var(--hand);font-size:clamp(30px,5.4vw,38px);line-height:1.05}
+.note .count{font-size:14px;color:var(--muted)}
+.reset{justify-self:start;background:none;border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px;color:var(--muted);cursor:pointer}
+.reset:hover{color:var(--ink);border-color:var(--muted)}
+.picked{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.picked li{font-size:14px;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:4px 12px}
+
+/* poem */
+.poem{background:var(--paper);border-radius:4px;padding:34px clamp(20px,5vw,48px) 30px;position:relative;
+  background-image:repeating-linear-gradient(var(--paper) 0 37px,var(--rule) 37px 38px);background-position:0 26px;
+  box-shadow:0 1px 0 var(--line),0 18px 40px -26px rgba(20,40,80,.35);transform:rotate(.6deg)}
+.poem::before{content:"";position:absolute;top:-12px;left:50%;width:92px;height:26px;margin-left:-46px;background:var(--sun);opacity:.55;transform:rotate(-3deg);border-radius:2px}
+.poem p{font-family:var(--hand);font-size:clamp(25px,4.6vw,31px);line-height:38px;white-space:pre-line}
+.poem .stanza+.stanza{margin-top:38px}
+.poem .sign{text-align:right;margin-top:38px;color:var(--accent)}
+
+/* next */
+.next{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.next li{display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:start;font-size:18px}
+.box{width:24px;height:24px;border:2px solid var(--muted);border-radius:6px;margin-top:3px;display:grid;place-items:center;cursor:pointer;background:none;padding:0}
+.box[aria-pressed="true"]{border-color:var(--accent);background:var(--accent)}
+.box[aria-pressed="true"]::after{content:"";width:10px;height:6px;border-left:2.5px solid var(--bg);border-bottom:2.5px solid var(--bg);transform:rotate(-45deg) translate(1px,-1px)}
+
+/* door */
+.door-wrap{display:grid;justify-items:center;gap:14px;text-align:center}
+.door{background:none;border:0;padding:0;cursor:pointer;width:88px;height:132px;perspective:400px}
+.door .frame{width:100%;height:100%;border:3px solid var(--ink);border-bottom:0;border-radius:44px 44px 0 0;position:relative;background:var(--sun);overflow:hidden}
+.door .leaf{position:absolute;inset:0;background:var(--accent);border-radius:41px 41px 0 0;transform-origin:left center;transition:transform .9s cubic-bezier(.3,.7,.3,1)}
+.door .knob{position:absolute;right:14px;top:58%;width:9px;height:9px;border-radius:50%;background:var(--sun)}
+.door.open .leaf{transform:rotateY(-78deg)}
+.door .inside{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--hand);font-size:30px;color:var(--ink)}
+.door-msg{font-family:var(--hand);font-size:clamp(30px,6vw,40px);line-height:1.1;max-width:22ch;min-height:2.2em}
+.door-hint{font-size:15px;color:var(--muted)}
+
+footer{text-align:center;padding-block:10px 60px;font-family:var(--hand);font-size:28px;color:var(--muted)}
+footer b{font-weight:400;color:var(--ink)}
+
+/* falling daisies */
+.rain{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:20}
+.rain svg{position:absolute;top:-40px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(calc(100vh + 80px)) rotate(var(--spin))}}
+
+@media (max-width:620px){
+  .loves{grid-template-columns:1fr}
+  .flower{max-width:260px}
+  .numbers{grid-template-columns:1fr 1fr}
+  .tie-row{grid-template-columns:64px 1fr 30px}
+}
+@media (prefers-reduced-motion:reduce){
+  .flower .petal,.door .leaf{transition:none}
+  .rain{display:none}
+}
+</style>
+
+</head>
+<body>
+<header class="meadow">
+  <canvas id="field" aria-label="a field of daisies under a summer sky. tap to plant another one."></canvas>
+  <div class="hello">
+    <h1>happy one month, <span>maddy</span></h1>
+    <p class="hint">tap the grass to plant a daisy</p>
+  </div>
+</header>
+
+<main class="page">
+
+  <section aria-labelledby="h-day">
+    <h2 id="h-day">the day with the daisies</h2>
+    <p class="lede">It was a hot blue day. We threw a Frisbee around the park, badly, and we both ended up wearing daisy crowns. I kept breaking mine.</p>
+    <p class="lede">You wrote me a poem about it after. Upside down, with a door hidden in it. So here's a field of daisies.</p>
+  </section>
+
+  <section aria-labelledby="h-month">
+    <h2 id="h-month">our first month</h2>
+    <ol class="timeline">
+      <li>
+        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="mini"></g></svg></div>
+        <div><div class="when">25 SEP</div><h3>the start of us</h3><p>The first "I love you". We didn't waste any time, did we.</p></div>
+      </li>
+      <li>
+        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="mini"></g></svg></div>
+        <div><div class="when">26 SEP</div><h3>the first "i miss you"</h3><p>About a day later. Which is fair, honestly.</p></div>
+      </li>
+      <li>
+        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="mini"></g></svg></div>
+        <div><div class="when">3 OCT</div><h3>our record day</h3><p>We did not stop texting. At all.</p></div>
+      </li>
+      <li>
+        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="mini"></g></svg></div>
+        <div><div class="when">ONE HOT BLUE DAY</div><h3>frisbee and daisy crowns</h3><p>The park, the sun, the daisies. Then your poem.</p></div>
+      </li>
+      <li>
+        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="mini"></g></svg></div>
+        <div><div class="when">23 OCT</div><h3>school walks, then queenstown</h3><p>Interval and lunch with you, then you drove off with Carli. I spent all of cleaning thinking every person walking past was you.</p></div>
+      </li>
+      <li class="today">
+        <div class="dot"><svg viewBox="0 0 24 24" aria-hidden="true"><g class="mini"></g></svg></div>
+        <div><div class="when">25 OCT</div><h3>one month</h3><p>Today. Hi :)</p></div>
+      </li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="h-nums">
+    <h2 id="h-nums">month one, in numbers</h2>
+    <div class="numbers">
+      <div class="num"><b>1</b><span>month so far</span></div>
+      <div class="num"><b>45</b><span>times you've said door (I'm on 20)</span></div>
+      <div class="num"><b>1,700</b><span>hehes, between the two of us</span></div>
+      <div class="num"><b>41</b><span>days we've talked</span></div>
+      <div class="num wide">
+        <span>"love you" count</span>
+        <div class="tie">
+          <div class="tie-row"><span>me</span><div class="tie-bar"><i style="width:100%"></i></div><em>65</em></div>
+          <div class="tie-row"><span>you</span><div class="tie-bar her"><i style="width:98.5%"></i></div><em>64</em></div>
+        </div>
+        <span>Basically a tie. You're one behind, though. Just saying.</span>
+      </div>
+      <div class="num wide">
+        <span>when we talk, hour by hour</span>
+        <div class="hours" id="hours" role="img" aria-label="messages by hour of day. most are between 10 and 11pm."></div>
+        <div class="hour-labels"><span>12am</span><span>6am</span><span>12pm</span><span>6pm</span><span>11pm</span></div>
+        <span>10pm is our hour, apparently.</span>
+      </div>
+    </div>
+    <p class="counted">(counted the night before, so the real numbers are even bigger now)</p>
+  </section>
+
+  <section aria-labelledby="h-loves">
+    <h2 id="h-loves">loves me, loves me...</h2>
+    <p class="lede">Pull a petal. Each one's a reason.</p>
+    <div class="loves">
+      <svg class="flower" id="flower" viewBox="0 0 300 300" role="group" aria-label="a daisy. each petal is a reason."></svg>
+      <div class="note" aria-live="polite">
+        <div class="label">REASON</div>
+        <div class="reason" id="reason">go on, pick one</div>
+        <div class="count" id="count">10 petals left</div>
+        <button class="reset" id="reset" type="button" hidden>put the petals back</button>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-poem">
+    <h2 id="h-poem">a poem for you</h2>
+    <div class="poem">
+      <p class="stanza">It was a hot blue day, a Frisbee in the air,
+Daisy crowns on both our heads, no worry and no care.
+I didn't know that afternoon would stay with me so long,
+But you've been in my every day, in every silly song.</p>
+      <p class="stanza">You're kind in all the quiet ways, you're funny, sweet and bright,
+You make me feel at ease, like everything's alright.
+You notice things, you care, you laugh, you listen, and you stay,
+And I'm so glad that out of everyone, it's you I get to say:</p>
+      <p class="stanza">Door.
+(And I love you.)</p>
+      <p class="sign">your jackieson :V</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-next">
+    <h2 id="h-next">things we're doing next</h2>
+    <ul class="next">
+      <li><button class="box" type="button" aria-pressed="false" aria-label="tick off"></button><span>Tuesday after school</span></li>
+      <li><button class="box" type="button" aria-pressed="false" aria-label="tick off"></button><span>Lying in the grass with you, properly this time</span></li>
+      <li><button class="box" type="button" aria-pressed="false" aria-label="tick off"></button><span>A movie we both fall asleep halfway through</span></li>
+      <li><button class="box" type="button" aria-pressed="false" aria-label="tick off"></button><span>The luge, together (I'll hold your hand on the bridge)</span></li>
+      <li><button class="box" type="button" aria-pressed="false" aria-label="tick off"></button><span>Summer</span></li>
+      <li><button class="box" type="button" aria-pressed="false" aria-label="tick off"></button><span>Japan, one day</span></li>
+    </ul>
+  </section>
+
+  <section class="door-wrap" aria-labelledby="h-door">
+    <h2 id="h-door">one more thing</h2>
+    <button class="door" id="door" type="button" aria-label="open the door">
+      <div class="frame"><div class="inside">:v</div><div class="leaf"><div class="knob"></div></div></div>
+    </button>
+    <p class="door-msg" id="doormsg" aria-live="polite"></p>
+    <p class="door-hint" id="doorhint">you know what to do</p>
+  </section>
+
+</main>
+
+<footer>made by <b>jackieson</b>, for <b>maddy</b> &nbsp;:V :v</footer>
+
+<script>
+(function(){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let C = {};
+  function readColors(){
+    const s = getComputedStyle(document.documentElement);
+    ['--sky','--bg','--petal','--petal-edge','--sun','--leaf','--grass','--grass-deep','--ink'].forEach(k=>C[k]=s.getPropertyValue(k).trim());
+    C.dark = (s.getPropertyValue('color-scheme')||'').includes('dark');
+  }
+  readColors();
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{readColors();if(reduce)draw(0)});
+  new MutationObserver(()=>{readColors();if(reduce)draw(0)}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+
+  /* ---------- the meadow ---------- */
+  const cv = document.getElementById('field');
+  const ctx = cv.getContext('2d');
+  let W=0,H=0,daisies=[],blades=[],stars=[],clouds=[];
+  const rnd=(a,b)=>a+Math.random()*(b-a);
+
+  function build(){
+    const dpr = Math.min(window.devicePixelRatio||1,2);
+    W = cv.clientWidth; H = cv.clientHeight;
+    cv.width = W*dpr; cv.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const ground = H*0.62;
+    blades=[]; for(let i=0;i<W/3;i++) blades.push({x:rnd(0,W),h:rnd(18,60),p:rnd(0,6.28),y:rnd(ground+10,H+10)});
+    blades.sort((a,b)=>a.y-b.y);
+    const keep = daisies.filter(d=>d.planted);
+    daisies=[];
+    const n = Math.round(W/26);
+    for(let i=0;i<n;i++){
+      const y = rnd(ground+8,H-6);
+      const depth=(y-ground)/(H-ground);
+      daisies.push({x:rnd(0,W),y,h:rnd(26,60)*(0.6+depth),r:(5+depth*9)*rnd(.85,1.15),p:rnd(0,6.28),born:-1e9,rot:rnd(0,1)});
+    }
+    keep.forEach(d=>daisies.push(d));
+    daisies.sort((a,b)=>a.y-b.y);
+    stars=[]; for(let i=0;i<W/9;i++) stars.push({x:rnd(0,W),y:rnd(0,ground*0.9),r:rnd(.4,1.5),p:rnd(0,6.28)});
+    clouds=[]; for(let i=0;i<3;i++) clouds.push({x:rnd(0,W),y:rnd(H*0.08,H*0.32),s:rnd(.7,1.2),v:rnd(4,9)});
+  }
+
+  function daisyHead(x,y,r,rot,scale){
+    if(scale<=0) return;
+    r*=scale;
+    ctx.save(); ctx.translate(x,y); ctx.rotate(rot);
+    ctx.fillStyle=C['--petal']; ctx.strokeStyle=C['--petal-edge']; ctx.lineWidth=Math.max(.5,r*.06);
+    for(let i=0;i<12;i++){
+      ctx.save(); ctx.rotate(i*Math.PI/6);
+      ctx.beginPath(); ctx.ellipse(0,-r*0.95,r*0.32,r*0.75,0,0,Math.PI*2); ctx.fill(); ctx.stroke();
+      ctx.restore();
+    }
+    ctx.fillStyle=C['--sun']; ctx.beginPath(); ctx.arc(0,0,r*0.42,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+
+  function frisbee(t){
+    const period=11, k=(t%period)/period;
+    if(k>0.42) return;
+    const u=k/0.42;
+    const x=-40+u*(W+80), y=H*0.42 - Math.sin(u*Math.PI)*H*0.22;
+    ctx.save(); ctx.translate(x,y); ctx.rotate(-0.25+u*0.4);
+    ctx.fillStyle=C.dark?'#ff8fa8':'#ff6b8a';
+    ctx.beginPath(); ctx.ellipse(0,0,18,6,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.35)'; ctx.beginPath(); ctx.ellipse(-3,-1.5,9,2.2,0,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+
+  function draw(t){
+    const ground=H*0.62;
+    const g=ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,C['--sky']); g.addColorStop(1,C['--bg']);
+    ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+
+    // sun or moon
+    const narrow=W<640, sx=narrow?W-34:W*0.86, sy=narrow?30:H*0.2, sc=narrow?0.55:1;
+    if(C.dark){
+      stars.forEach(s=>{ctx.globalAlpha=.4+.6*Math.abs(Math.sin(t*.8+s.p));ctx.fillStyle=C['--petal'];ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,6.28);ctx.fill();});
+      ctx.globalAlpha=1;
+      ctx.fillStyle=C['--sun']; ctx.beginPath(); ctx.arc(sx,sy,26*sc,0,6.28); ctx.fill();
+      ctx.fillStyle=C['--sky']; ctx.beginPath(); ctx.arc(sx+11*sc,sy-7*sc,23*sc,0,6.28); ctx.fill();
+    } else {
+      ctx.fillStyle=C['--sun'];
+      ctx.globalAlpha=.25; ctx.beginPath(); ctx.arc(sx,sy,(58+Math.sin(t)*3)*sc,0,6.28); ctx.fill();
+      ctx.globalAlpha=1; ctx.beginPath(); ctx.arc(sx,sy,36*sc,0,6.28); ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.85)';
+      clouds.forEach(c=>{
+        const x=((c.x+t*c.v)%(W+200))-100;
+        ctx.beginPath();
+        ctx.arc(x,c.y,22*c.s,0,6.28); ctx.arc(x+24*c.s,c.y-10*c.s,26*c.s,0,6.28); ctx.arc(x+52*c.s,c.y,20*c.s,0,6.28);
+        ctx.fill();
+      });
+    }
+    if(!reduce) frisbee(t);
+
+    // hills
+    ctx.fillStyle=C['--grass'];
+    ctx.beginPath(); ctx.moveTo(0,ground+12);
+    for(let x=0;x<=W;x+=20) ctx.lineTo(x,ground+Math.sin(x/170)*10);
+    ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath(); ctx.fill();
+
+    // grass blades
+    ctx.strokeStyle=C['--grass-deep']; ctx.lineWidth=1.6; ctx.lineCap='round';
+    blades.forEach(b=>{
+      const sw=Math.sin(t*1.4+b.p+b.x/120)*5;
+      ctx.beginPath(); ctx.moveTo(b.x,b.y); ctx.quadraticCurveTo(b.x+sw*.4,b.y-b.h*.5,b.x+sw,b.y-b.h); ctx.stroke();
+    });
+
+    // daisies
+    daisies.forEach(d=>{
+      const grow = Math.min(1,(t-d.born)/0.7);
+      const e = grow<1 ? 1-Math.pow(1-grow,3) : 1;
+      const sway = Math.sin(t*1.3+d.p+d.x/150)*(d.h*0.12);
+      const hx=d.x+sway, hy=d.y-d.h*e;
+      ctx.strokeStyle=C['--leaf']; ctx.lineWidth=Math.max(1.2,d.r*.22);
+      ctx.beginPath(); ctx.moveTo(d.x,d.y); ctx.quadraticCurveTo(d.x+sway*.2,d.y-d.h*e*.5,hx,hy); ctx.stroke();
+      daisyHead(hx,hy,d.r,d.rot+sway*.02,e);
+    });
+  }
+
+  let t0=performance.now(), last=0;
+  function loop(now){ last=(now-t0)/1000; draw(last); requestAnimationFrame(loop); }
+
+  function plant(x,y){
+    const ground=H*0.62;
+    y=Math.max(ground+10,Math.min(H-4,y<ground?ground+rnd(20,H-ground-10):y));
+    const depth=(y-ground)/(H-ground);
+    daisies.push({x,y,h:rnd(32,64)*(0.6+depth),r:(7+depth*10),p:rnd(0,6.28),born:last,rot:rnd(0,1),planted:true});
+    daisies.sort((a,b)=>a.y-b.y);
+    if(daisies.length>400) daisies.splice(daisies.findIndex(d=>!d.planted),1);
+    if(reduce){ daisies[daisies.length-1].born=-1e9; draw(0); }
+  }
+  cv.addEventListener('pointerdown',e=>{
+    const r=cv.getBoundingClientRect();
+    plant(e.clientX-r.left,e.clientY-r.top);
+  });
+
+  build();
+  if(reduce) draw(0); else requestAnimationFrame(loop);
+  let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{build();if(reduce)draw(0)},150)});
+
+  /* ---------- tiny daisies for the timeline ---------- */
+  const NS='http://www.w3.org/2000/svg';
+  function miniDaisy(g,cx,cy,r,petals){
+    for(let i=0;i<petals;i++){
+      const e=document.createElementNS(NS,'ellipse');
+      e.setAttribute('cx',cx); e.setAttribute('cy',cy-r*0.9);
+      e.setAttribute('rx',r*0.32); e.setAttribute('ry',r*0.7);
+      e.setAttribute('transform',`rotate(${i*360/petals} ${cx} ${cy})`);
+      e.setAttribute('style','fill:var(--petal);stroke:var(--petal-edge);stroke-width:1');
+      g.appendChild(e);
+    }
+    const c=document.createElementNS(NS,'circle');
+    c.setAttribute('cx',cx); c.setAttribute('cy',cy); c.setAttribute('r',r*0.42);
+    c.setAttribute('style','fill:var(--sun)');
+    g.appendChild(c);
+  }
+  document.querySelectorAll('.mini').forEach(g=>miniDaisy(g,12,12,10,10));
+
+  /* ---------- hour chart ---------- */
+  const hours=[1909,1196,224,1,0,0,0,46,28,101,83,89,181,103,79,499,931,988,482,353,721,1469,6606,4239];
+  const hmax=Math.max(...hours);
+  const hb=document.getElementById('hours');
+  hours.forEach((v,i)=>{const b=document.createElement('i');b.style.height=(v/hmax*100)+'%';if(i===22)b.className='peak';b.title=v.toLocaleString()+' messages';hb.appendChild(b);});
+
+  /* ---------- loves me ---------- */
+  const reasons=[
+    "you're really easy to be around",
+    "you're actually funny. the jackelinville thing got me",
+    "you're honest, even when it's awkward",
+    "you notice the small stuff",
+    "you're thoughtful. alba's pounamu, for example",
+    "you're organised. we'd have zero plans without you",
+    "you write upside down poems",
+    "door",
+    "you calm me down when i'm overthinking",
+    "you're just you"
+  ];
+  const fl=document.getElementById('flower');
+  const reasonEl=document.getElementById('reason'), countEl=document.getElementById('count'), resetEl=document.getElementById('reset');
+  let pulled=0;
+  const N=reasons.length;
+  for(let i=0;i<N;i++){
+    const wrap=document.createElementNS(NS,'g');
+    wrap.setAttribute('class','petal'); wrap.setAttribute('tabindex','0'); wrap.setAttribute('role','button');
+    wrap.setAttribute('aria-label','pull a petal');
+    const rot=document.createElementNS(NS,'g');
+    rot.setAttribute('transform',`rotate(${i*360/N} 150 150)`);
+    const e=document.createElementNS(NS,'ellipse');
+    e.setAttribute('cx',150); e.setAttribute('cy',78); e.setAttribute('rx',22); e.setAttribute('ry',56);
+    rot.appendChild(e); wrap.appendChild(rot); fl.appendChild(wrap);
+    const pull=()=>{
+      if(wrap.classList.contains('gone')) return;
+      const a=(i*360/N-90)*Math.PI/180;
+      const dx=Math.cos(a)*60+rnd(-30,30), dy=220+rnd(0,80);
+      wrap.style.transform=`translate(${dx}px,${dy}px) rotate(${rnd(-120,120)}deg)`;
+      wrap.classList.add('gone');
+      pulled++;
+      reasonEl.textContent = pulled<N ? reasons[pulled-1] : reasons[N-1]+". loves me :)";
+      countEl.textContent = pulled<N ? (N-pulled)+(N-pulled===1?' petal left':' petals left') : 'that was the last one';
+      if(pulled>=N){ resetEl.hidden=false; rain(26); }
+    };
+    wrap.addEventListener('click',pull);
+    wrap.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();pull();}});
+  }
+  const cen=document.createElementNS(NS,'circle');
+  cen.setAttribute('cx',150);cen.setAttribute('cy',150);cen.setAttribute('r',40);cen.setAttribute('class','center');
+  fl.appendChild(cen);
+  for(let i=0;i<22;i++){
+    const a=i*2.4, rr=4+Math.sqrt(i)*6.5;
+    const d=document.createElementNS(NS,'circle');
+    d.setAttribute('cx',150+Math.cos(a)*rr);d.setAttribute('cy',150+Math.sin(a)*rr);d.setAttribute('r',1.8);d.setAttribute('class','center-dots');
+    fl.appendChild(d);
+  }
+  resetEl.addEventListener('click',()=>{
+    fl.querySelectorAll('.petal').forEach(p=>{p.classList.remove('gone');p.style.transform='';});
+    pulled=0; reasonEl.textContent='go on, pick one'; countEl.textContent=N+' petals left'; resetEl.hidden=true;
+  });
+
+  /* ---------- checklist ---------- */
+  document.querySelectorAll('.box').forEach(b=>b.addEventListener('click',()=>{
+    const on=b.getAttribute('aria-pressed')!=='true';
+    b.setAttribute('aria-pressed',on);
+    if(on) rain(6);
+  }));
+
+  /* ---------- the door ---------- */
+  const door=document.getElementById('door'), msg=document.getElementById('doormsg'), hint=document.getElementById('doorhint');
+  door.addEventListener('click',()=>{
+    const open=!door.classList.contains('open');
+    door.classList.toggle('open',open);
+    if(open){
+      msg.textContent="door. (you found it. that's the whole message. i love you.)";
+      hint.textContent="tap it again to close";
+      rain(40);
+    } else {
+      msg.textContent=""; hint.textContent="you know what to do";
+    }
+  });
+
+  /* ---------- daisy rain ---------- */
+  const rainBox=document.createElement('div'); rainBox.className='rain'; document.body.appendChild(rainBox);
+  function rain(n){
+    if(reduce) return;
+    for(let i=0;i<n;i++){
+      const s=document.createElementNS(NS,'svg'); const size=rnd(16,30);
+      s.setAttribute('viewBox','0 0 24 24'); s.setAttribute('width',size); s.setAttribute('height',size);
+      s.style.left=rnd(0,100)+'vw'; s.style.animationDuration=rnd(2.6,5)+'s'; s.style.animationDelay=rnd(0,1.2)+'s';
+      s.style.setProperty('--spin',rnd(-360,360)+'deg');
+      const g=document.createElementNS(NS,'g'); miniDaisy(g,12,12,10,10); s.appendChild(g);
+      rainBox.appendChild(s);
+      s.addEventListener('animationend',()=>s.remove());
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
